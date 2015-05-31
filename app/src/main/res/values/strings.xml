@@ -7,4 +7,14 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_adventure">AdventureActivity</string>
+    <string name="title_activity_tree">TreeActivity</string>
+    <string name="title_activity_adventure_maps">Map</string>
+    <string name="title_activity_new_tree">NewTreeActivity</string>
+
+    <string name="tree_prompt">Choose a type</string>
+    <string-array name="tree_arrays">
+        <item>Mango</item>
+        <item>Avocado</item>
+        <item>Lychee</item>
+    </string-array>
 </resources>

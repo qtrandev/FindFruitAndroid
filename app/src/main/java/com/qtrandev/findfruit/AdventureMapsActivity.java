@@ -1,6 +1,6 @@
 package com.qtrandev.findfruit;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -11,15 +11,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public class MapsActivity extends FragmentActivity {
+import java.util.List;
+
+public class AdventureMapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_adventure_maps);
         setUpMapIfNeeded();
     }
 
@@ -64,7 +67,7 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(25.7717896, -80.2412616), 12.0f) );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(25.7717896, -80.2412616), 12.0f));
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(25.7717896, -80.2412616))
                 .title("Mango")
@@ -72,54 +75,23 @@ public class MapsActivity extends FragmentActivity {
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         Marker marker1 = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(25.830696,-80.2749993))
-                .title("Avocado")
+                .title("Mango")
                 .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         Marker marker2 = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(25.7762188,-80.2938821))
-                .title("Lychees")
+                .title("Mango")
                 .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        Marker marker3 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.7626149,-80.2901055))
-                .title("Mamey")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        Marker marker4 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.8204207,-80.2619531))
-                .title("Kumquat")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        Marker marker5 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.8142396,-80.2592065))
-                .title("Dragon Fruit")
-                .snippet("Allowed Picking: No")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
-        {
-            @Override
-            public void onInfoWindowClick(Marker arg0) {
-                if(arg0.getTitle().equals("Mango")) {
-                    Intent i = new Intent(MapsActivity.this, TreeActivity.class);
-                    startActivity(i);
-                } else if (arg0.getTitle().equals("Add New Tree")) {
-                    Intent i = new Intent(MapsActivity.this, NewTreeActivity.class);
-                    startActivity(i);
-                }
-            }
+        PolylineOptions line = new PolylineOptions();
+        line.width(5);
+        line.color(Color.RED);
 
-        });
+        line.add(new LatLng(25.7717896, -80.2412616));
+        line.add(new LatLng(25.830696,-80.2749993));
+        line.add(new LatLng(25.7762188,-80.2938821));
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick (LatLng point) {
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(point)
-                        .title("Add New Tree")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                marker.showInfoWindow();
-            }
-        });
+        mMap.addPolyline(line);
     }
 }

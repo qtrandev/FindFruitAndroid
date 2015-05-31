@@ -46,6 +46,18 @@
             android:name=".AdventureActivity"
             android:label="@string/title_activity_adventure" >
         </activity>
+        <activity
+            android:name=".TreeActivity"
+            android:label="@string/title_activity_tree" >
+        </activity>
+        <activity
+            android:name=".AdventureMapsActivity"
+            android:label="@string/title_activity_adventure_maps" >
+        </activity>
+        <activity
+            android:name=".NewTreeActivity"
+            android:label="@string/title_activity_new_tree" >
+        </activity>
     </application>
 
 </manifest>
