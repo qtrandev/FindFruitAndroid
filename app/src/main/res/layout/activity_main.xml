@@ -10,30 +10,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:adjustViewBounds="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="FindFruit"
-        android:id="@+id/textView"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/mapButton"
-        android:layout_alignStart="@+id/mapButton" />
+        android:adjustViewBounds="false" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Map"
         android:id="@+id/mapButton"
-        android:layout_below="@+id/textView"
         android:layout_alignLeft="@+id/profileButton"
         android:layout_alignStart="@+id/profileButton"
-        android:layout_marginTop="33dp" />
+        android:layout_marginTop="33dp"
+        android:layout_centerVertical="true" />
 
     <Button
         android:layout_width="wrap_content"

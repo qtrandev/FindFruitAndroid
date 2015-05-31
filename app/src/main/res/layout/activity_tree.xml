@@ -140,6 +140,16 @@
         android:layout_height="wrap_content"
         android:text="Check-in"
         android:id="@+id/button7"
-        android:layout_below="@+id/textView8"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/textView16"
+        android:layout_toRightOf="@+id/textView12"
+        android:layout_toEndOf="@+id/textView12" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message"
+        android:id="@+id/button8"
+        android:layout_above="@+id/textView16"
+        android:layout_toRightOf="@+id/button7"
+        android:layout_toEndOf="@+id/button7" />
 </RelativeLayout>
