@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Find Fruit</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_adventure">AdventureActivity</string>
+</resources>
