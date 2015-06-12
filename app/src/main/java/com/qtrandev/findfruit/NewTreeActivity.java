@@ -7,7 +7,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.firebase.client.Firebase;
 import com.parse.ParseObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class NewTreeActivity extends ActionBarActivity {
@@ -36,13 +40,21 @@ public class NewTreeActivity extends ActionBarActivity {
     }
 
     private void saveClicked() {
-
-        ParseObject tree = new ParseObject("Tree");
-        tree.setObjectId("main");
-        tree.put("type", type);
-        tree.put("lat", lat);
-        tree.put("lon", lon);
-        tree.saveInBackground();
+        Firebase ref = new Firebase("https://findfruit.firebaseio.com/");
+        Firebase trees = ref.child("tree");
+        Map<String, Object> newTree = new HashMap<String, Object>();
+        newTree.put("treetype", type);
+        newTree.put("lat", lat);
+        newTree.put("lng", lon);
+        newTree.put("marker", "leaf");
+        newTree.put("allowpick", "Yes");
+        newTree.put("verified", "No");
+        newTree.put("fulltype", "Persea americana");
+        newTree.put("source", "http://findfruit.co");
+        newTree.put("season", "May to November");
+        newTree.put("publiclocation", "No");
+        trees.push().setValue(newTree);
+        System.out.println("Success");
     }
 
 
