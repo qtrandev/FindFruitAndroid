@@ -3,6 +3,7 @@ package com.qtrandev.findfruit;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,10 +12,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private double currentLat = 0;
+    private double currentLon = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +103,48 @@ public class MapsActivity extends FragmentActivity {
                 .snippet("Allowed Picking: No")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
 
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener()
-        {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Tree");
+        try {
+            ParseObject object = query.getFirst();
+            String type = object.getString("type");
+            double lat = object.getDouble("lat");
+            double lon = object.getDouble("lon");
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(lat, lon))
+                    .title("CUSTOM: " + type)
+                    .snippet("Allowed Picking: Yes")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        } catch (ParseException ex) {
+            ex.toString();
+        }
+
+        query.getInBackground("main", new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) { //exception is null
+                    String type = object.getString("type");
+                    double lat = object.getDouble("lat");
+                    double lon = object.getDouble("lon");
+                    mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(lat,lon))
+                            .title("CUSTOM: "+type)
+                            .snippet("Allowed Picking: Yes")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                } else {
+                    Toast.makeText(MapsActivity.this, "Parse query error", Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker arg0) {
-                if(arg0.getTitle().equals("Mango")) {
+                if (arg0.getTitle().equals("Mango")) {
                     Intent i = new Intent(MapsActivity.this, TreeActivity.class);
                     startActivity(i);
                 } else if (arg0.getTitle().equals("Add New Tree")) {
                     Intent i = new Intent(MapsActivity.this, NewTreeActivity.class);
+                    i.putExtra("Lat", currentLat);
+                    i.putExtra("Lon", currentLon);
                     startActivity(i);
                 }
             }
@@ -114,6 +154,8 @@ public class MapsActivity extends FragmentActivity {
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick (LatLng point) {
+                currentLat = point.latitude;
+                currentLon = point.longitude;
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(point)
                         .title("Add New Tree")

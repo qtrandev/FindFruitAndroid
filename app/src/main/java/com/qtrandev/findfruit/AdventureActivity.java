@@ -15,6 +15,7 @@ public class AdventureActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adventure);
+        setTitle("Adventures");
 
         Button mangoButton = (Button) findViewById(R.id.button2);
         mangoButton.setOnClickListener(new View.OnClickListener() {

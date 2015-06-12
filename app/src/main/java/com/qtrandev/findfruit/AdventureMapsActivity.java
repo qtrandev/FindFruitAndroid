@@ -22,6 +22,7 @@ public class AdventureMapsActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Adventure");
         setContentView(R.layout.activity_adventure_maps);
         setUpMapIfNeeded();
     }
