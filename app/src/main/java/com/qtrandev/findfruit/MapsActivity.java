@@ -5,6 +5,10 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -17,6 +21,9 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Collection;
+import java.util.HashMap;
+
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -26,6 +33,7 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
     }
@@ -71,68 +79,26 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(25.7717896, -80.2412616), 12.0f) );
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.7717896, -80.2412616))
-                .title("Mango")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        Marker marker1 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.830696,-80.2749993))
-                .title("Avocado")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        Marker marker2 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.7762188,-80.2938821))
-                .title("Lychees")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        Marker marker3 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.7626149,-80.2901055))
-                .title("Mamey")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        Marker marker4 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.8204207,-80.2619531))
-                .title("Kumquat")
-                .snippet("Allowed Picking: Yes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        Marker marker5 = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(25.8142396,-80.2592065))
-                .title("Dragon Fruit")
-                .snippet("Allowed Picking: No")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(25.7717896, -80.2412616), 9.0f) );
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Tree");
-        try {
-            ParseObject object = query.getFirst();
-            String type = object.getString("type");
-            double lat = object.getDouble("lat");
-            double lon = object.getDouble("lon");
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(lat, lon))
-                    .title("CUSTOM: " + type)
-                    .snippet("Allowed Picking: Yes")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        } catch (ParseException ex) {
-            ex.toString();
-        }
-
-        query.getInBackground("main", new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) { //exception is null
-                    String type = object.getString("type");
-                    double lat = object.getDouble("lat");
-                    double lon = object.getDouble("lon");
+        Firebase myFirebaseRef = new Firebase("https://findfruit.firebaseio.com/");
+        myFirebaseRef.child("tree").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot tree : snapshot.getChildren()) {
+                    Double lat = tree.child("lat").getValue(Double.class);
+                    Double lng = tree.child("lng").getValue(Double.class);
+                    LatLng latlng = new LatLng(lat,lng);
+                    String title = tree.child("treetype").getValue(String.class);
+                    String content = "Allowed Picking: "+tree.child("allowpick").getValue(String.class);
                     mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat,lon))
-                            .title("CUSTOM: "+type)
-                            .snippet("Allowed Picking: Yes")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                } else {
-                    Toast.makeText(MapsActivity.this, "Parse query error", Toast.LENGTH_SHORT);
+                            .position(latlng)
+                            .title(title)
+                            .snippet(content)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 }
             }
+            @Override public void onCancelled(FirebaseError error) { }
         });
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
