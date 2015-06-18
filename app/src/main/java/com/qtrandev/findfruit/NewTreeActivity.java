@@ -42,19 +42,8 @@ public class NewTreeActivity extends ActionBarActivity {
     private void saveClicked() {
         Firebase ref = new Firebase("https://findfruit.firebaseio.com/");
         Firebase trees = ref.child("tree");
-        Map<String, Object> newTree = new HashMap<String, Object>();
-        newTree.put("treetype", type);
-        newTree.put("lat", lat);
-        newTree.put("lng", lon);
-        newTree.put("marker", "leaf");
-        newTree.put("allowpick", "Yes");
-        newTree.put("verified", "No");
-        newTree.put("fulltype", "Persea americana");
-        newTree.put("source", "http://findfruit.co");
-        newTree.put("season", "May to November");
-        newTree.put("publiclocation", "No");
-        trees.push().setValue(newTree);
-        System.out.println("Success");
+        Tree newTree = new Tree(type, lat, lon);
+        trees.push().setValue(newTree.getTreeToWrite());
     }
 
 

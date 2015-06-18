@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -94,5 +95,13 @@ public class AdventureMapsActivity extends FragmentActivity {
         line.add(new LatLng(25.7762188,-80.2938821));
 
         mMap.addPolyline(line);
+
+        String[] trees = new String[3];
+        trees[0] = "abc";
+        trees[1] = "def";
+        trees[2] = "ghi";
+        Hunt newHunt = new Hunt("Mango Hunt", "Mango", trees);
+        Firebase ref = new Firebase("https://findfruit.firebaseio.com/").child("hunts");
+        ref.push().setValue(newHunt.getMapToWrite());
     }
 }
